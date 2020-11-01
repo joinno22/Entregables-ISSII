@@ -1,0 +1,132 @@
+@startuml
+class profesor{
+    DNI
+    nombre
+    apellidos
+    fechaNacimiento
+    email
+    categoria CategoriaProfesor
+}
+
+class tutoria{
+    diaSemana
+    horaComienzo
+    horaFin
+}
+
+class Espacio{
+    nombre
+    planta
+    capacidad
+}
+
+class Despacho{
+    
+}
+
+class Aula{
+    megafonia
+    proyector
+}
+
+class Asignatura{
+    nombre
+    acronimo
+    creditos
+    curso
+    tipo TipoAsignatura
+}
+
+class departamento{
+    nombre
+}
+
+class alumno{
+    DNI
+    nombre
+    apellidos
+    fechaNacimiento
+    email
+    metodoAcceso MetodoAcceso
+}
+
+class Nota{
+    valor
+    numeroConvocatoria
+    esMatriculadeHonor
+}
+
+class grado{
+    nombre
+    numero_años
+}
+
+class grupo{
+    nombre
+    año
+    actividad ActividadGrupo
+}
+
+class CitaTutoria{
+    fecha
+    hora
+}
+
+enum ActividadGrupo{
+    Teoria
+    Practicas
+}
+
+enum TipoAsignatura{
+    Obligatoria
+    Optativa
+    Formacion_basica
+}
+
+enum CategoriaProfesor{
+    Catedrático
+    Titular
+    Doctor
+    Doctor_Ayudante
+}
+
+enum MetodoAcceso{
+    Selectividad
+    Ciclo
+    Mayor
+    TituladoExtranjero
+}
+
+'asociaciones y restricciones
+alumno "1" -- "0..*" CitaTutoria : pide >
+note left on link:un alumno no puede pedir una tutoría mientras tenga otra pendiente
+CitaTutoria --*tutoria
+Despacho --*Espacio
+Aula -up-* Espacio
+profesor "1" -- "1" Despacho : TieneAsignado >
+grupo "1..*" -left- "1" Aula :ContieneA <
+grupo --* Asignatura
+profesor -right-* departamento
+Asignatura-right-*grado
+profesor "1"-up-"0..*" tutoria : Da >
+note right on link:un profesor no puede dar mas de 6 horas de tutoría a la semana
+departamento "1"--"1..*" Asignatura : GestionaDocenciaDe >
+alumno "1"--"1..*" Nota : Tiene >
+note right on link:un alumno no puede tener mas de una nota para la misma asignatura,convocatoria y año académico
+Nota "1"--"1" Asignatura : genera <
+alumno --*grupo
+note right on link:un alumno no puede pertenecer a mas de un grupo de teoría y de prácticas de cada asignatura
+profesor "1"--"1..*" Asignatura: imparteClaseEn
+note right on link: Un profesor no puede impartir mas de 24 créditos por curso y no puede enseñar a mas de 5 grupos
+
+
+note left of alumno:un alumno no puede matricularse en mas de 90 creditos o menos de 30 en un curso académico
+note right of tutoria:la hora de la tutoría debe estar comprendida entre la hora de comienzo y la hora del fin de la tutoría
+note right of Nota:para que una nota sea matrícula de honor debe ser superior a 9
+note right of alumno:los alumnos menores de 16 años no pueden acceder por selectividad
+note right of grupo:un grupo de teoría no puede tener mas de 75 alumnos,y el de prácticas no mas de 25
+
+
+
+@enduml
+
